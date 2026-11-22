@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { AnimeCard } from "./AnimeCard";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Link } from "react-router-dom";
 import NextAndPrevious from "./NextAndPrevious";
+import { FeatureGrid } from "./layout/index.js";
 
 const PER_PAGE = 20;
 
@@ -86,30 +86,25 @@ export const AnimeGrid = () => {
 
 	if (loading || !result) {
 		return (
-			<div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
-				{Array.from({ length: 12 }).map((_, i) => (
-					<Skeleton key={i} className="aspect-3/4 rounded-lg" />
+			<FeatureGrid columns={4}>
+				{Array.from({ length: PER_PAGE }).map((_, i) => (
+					<div key={i} className="space-y-2">
+						<Skeleton className="aspect-2/3 rounded-xl" />
+						<Skeleton className="h-4 w-4/5" />
+						<Skeleton className="h-3 w-1/2" />
+					</div>
 				))}
-			</div>
+			</FeatureGrid>
 		);
 	}
 
 	return (
 		<div className="space-y-8">
-			<NextAndPrevious
-				handlePageChange={handlePageChange}
-				page={page}
-				pageNumbers={pageNumbers}
-				totalPages={totalPages}
-			/>
-
-			<div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
+			<FeatureGrid columns={4}>
 				{result.items.map((anime) => (
-					<Link key={anime.id} to={`shepherd/anime/${anime.id}`}>
-						<AnimeCard anime={anime} />
-					</Link>
+					<AnimeCard key={anime.id} anime={anime} />
 				))}
-			</div>
+			</FeatureGrid>
 
 			<NextAndPrevious
 				handlePageChange={handlePageChange}

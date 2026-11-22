@@ -1,15 +1,20 @@
-import { AnimeSearch } from "../components/index.js";
+import { MetaDataInsert } from "@/lib/index.js";
 import { AnimeGrid } from "@/components/ui/custom/AnimeGrid";
+
+import { platform } from "@/platform/config/index.js";
 
 const Landing = () => {
 	return (
-		<main className="space-y-8">
-			<div className="px-4 pt-6">
-				<AnimeSearch />
-			</div>
+		<>
+			<MetaDataInsert title={platform.name} />
 
-			<AnimeGrid />
-		</main>
+			<section className="space-y-6">
+				<h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+					Recently updated
+				</h1>
+				<AnimeGrid />
+			</section>
+		</>
 	);
 };
 

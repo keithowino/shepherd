@@ -8,13 +8,14 @@
  * - Localization
  */
 // import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// import { HelmetProvider } from "react-helmet-async";
+
+import { ThemeProvider } from "@/platform/theme/index.js";
+import { HelmetProvider } from "react-helmet-async";
 
 // import { TooltipProvider } from "@/components/ui/tooltip.jsx";
 // import {
 // 	IdentityProvider,
 // 	NotificationProvider,
-// 	ThemeProvider,
 // } from "@/platform/index.js";
 
 /**
@@ -95,17 +96,15 @@
 */
 export function AppProviders({ children }) {
 	return (
-		// <ThemeProvider>
 		// 	<NotificationProvider>
 		// 		<IdentityProvider>
 		// 			<QueryClientProvider client={queryClient}>
-		// 				<HelmetProvider>
 		// 					<TooltipProvider>{children}</TooltipProvider>
-		// 				</HelmetProvider>
 		// 			</QueryClientProvider>
 		// 		</IdentityProvider>
 		// 	</NotificationProvider>
-		// </ThemeProvider>
-		<>{children}</>
+		<ThemeProvider>
+			<HelmetProvider>{children}</HelmetProvider>
+		</ThemeProvider>
 	);
 }
