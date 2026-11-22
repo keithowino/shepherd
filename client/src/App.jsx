@@ -5,11 +5,11 @@
 // import { motion } from "framer-motion";
 // import { Moon, Sun, Monitor } from "lucide-react";
 
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { AppProviders, AppRouter } from "./app/index.js";
-import { useTheme } from "./platform/theme/index.js";
-import { motion } from "framer-motion";
-import { Moon, Sun, Monitor } from "lucide-react";
+// import { useTheme } from "./platform/theme/index.js";
+// import { motion } from "framer-motion";
+// import { Moon, Sun, Monitor } from "lucide-react";
 
 // const THEME_CYCLE = ["light", "dark", "system"];
 
@@ -78,33 +78,33 @@ import { Moon, Sun, Monitor } from "lucide-react";
 
 // // ...
 
-const THEME_CYCLE = ["light", "dark", "system"];
+// const THEME_CYCLE = ["light", "dark", "system"];
 
 export default function App() {
-	const { theme, setTheme } = useTheme();
+	// const { theme, setTheme } = useTheme();
 
-	const cycleTheme = () => {
-		const currentIndex = THEME_CYCLE.indexOf(theme);
-		const nextTheme = THEME_CYCLE[(currentIndex + 1) % THEME_CYCLE.length];
-		setTheme(nextTheme);
-	};
+	// const cycleTheme = () => {
+	// 	const currentIndex = THEME_CYCLE.indexOf(theme);
+	// 	const nextTheme = THEME_CYCLE[(currentIndex + 1) % THEME_CYCLE.length];
+	// 	setTheme(nextTheme);
+	// };
 
-	const Icon = theme === "dark" ? Moon : theme === "light" ? Sun : Monitor;
+	// const Icon = theme === "dark" ? Moon : theme === "light" ? Sun : Monitor;
 
-	// Position the thumb based on the current theme
-	const thumbPosition = theme === "light" ? 2 : theme === "dark" ? 28 : 15;
+	// // Position the thumb based on the current theme
+	// const thumbPosition = theme === "light" ? 2 : theme === "dark" ? 28 : 15;
 
-	const label =
-		theme === "dark"
-			? "Switch to system theme"
-			: theme === "light"
-				? "Switch to dark theme"
-				: "Switch to light theme";
+	// const label =
+	// 	theme === "dark"
+	// 		? "Switch to system theme"
+	// 		: theme === "light"
+	// 			? "Switch to dark theme"
+	// 			: "Switch to light theme";
 	return (
 		<AppProviders>
 			<div className="min-h-screen">
 				<div className="container mx-auto py-8 px-4 space-y-6">
-					<section className="flex items-center justify-between p-5 bg-primary rounded-xl text-primary-foreground">
+					{/* <section className="flex items-center justify-between p-5 bg-primary rounded-xl text-primary-foreground">
 						<Link to="/">SHEPHERD</Link>
 
 						<button
@@ -125,7 +125,7 @@ export default function App() {
 								<Icon className="h-3.5 w-3.5" />
 							</motion.div>
 						</button>
-					</section>
+					</section> */}
 					<AppRouter />
 				</div>
 			</div>
