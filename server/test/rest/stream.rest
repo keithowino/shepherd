@@ -1,0 +1,13 @@
+@baseUrl = http://localhost:5000/api/v1
+
+### health
+
+GET http://localhost:5000/api/v1/health
+
+###
+
+GET {{baseUrl}}/anime/recent?page=3&perPage=20
+
+###
+
+GET {{baseUrl}}/anime/series/1000

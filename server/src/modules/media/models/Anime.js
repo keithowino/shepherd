@@ -1,0 +1,59 @@
+import mongoose from "mongoose";
+
+const animeSchema = new mongoose.Schema(
+	{
+		// _id: { type: Number }, // = Anikoto id
+		_id: { type: Number, required: true }, // = Anikoto id
+		title: String,
+		alternative: String,
+		titles: String,
+		native: String,
+		slug: String,
+		rating: String,
+		poster: String,
+		description: String,
+		aired: String,
+		season: String,
+		year: Number,
+		status: String,
+		score: String,
+		malId: String,
+		episodesCount: String,
+		isDub: Number,
+		isSub: Number,
+		// termsByType: {
+		// 	genre: [String],
+		// 	studios: [String],
+		// 	type: [String],
+		// },
+		termsByType: {
+			type: {
+				genre: [String],
+				producers: [String],
+				studios: [String],
+				type: [String],
+			},
+			default: {},
+		},
+		seriesFetchedAt: Date,
+		sourceUpdatedAt: Date, // Anikoto's updated_at
+		fetchedAt: { type: Date, index: true },
+	},
+	// { _id: false, timestamps: true },
+	{ timestamps: true },
+);
+
+animeSchema.index({ "termsByType.genre": 1 });
+animeSchema.index({ sourceUpdatedAt: -1 });
+
+// console.log("[SERVER] Anime schema before registration:", {
+// 	file: import.meta.url,
+// 	termsByType: animeSchema.path("termsByType")?.instance,
+// 	genre: animeSchema.path("termsByType.genre")?.instance,
+// 	studios: animeSchema.path("termsByType.studios")?.instance,
+// 	type: animeSchema.path("termsByType.type")?.instance,
+// 	schemaPaths: Object.keys(animeSchema.paths),
+// 	schemaDefinition: animeSchema.obj.termsByType,
+// });
+
+export const Anime = mongoose.model("Anime", animeSchema);
