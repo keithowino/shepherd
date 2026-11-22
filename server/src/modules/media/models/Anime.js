@@ -21,11 +21,6 @@ const animeSchema = new mongoose.Schema(
 		episodesCount: String,
 		isDub: Number,
 		isSub: Number,
-		// termsByType: {
-		// 	genre: [String],
-		// 	studios: [String],
-		// 	type: [String],
-		// },
 		termsByType: {
 			type: {
 				genre: [String],
@@ -45,15 +40,5 @@ const animeSchema = new mongoose.Schema(
 
 animeSchema.index({ "termsByType.genre": 1 });
 animeSchema.index({ sourceUpdatedAt: -1 });
-
-// console.log("[SERVER] Anime schema before registration:", {
-// 	file: import.meta.url,
-// 	termsByType: animeSchema.path("termsByType")?.instance,
-// 	genre: animeSchema.path("termsByType.genre")?.instance,
-// 	studios: animeSchema.path("termsByType.studios")?.instance,
-// 	type: animeSchema.path("termsByType.type")?.instance,
-// 	schemaPaths: Object.keys(animeSchema.paths),
-// 	schemaDefinition: animeSchema.obj.termsByType,
-// });
 
 export const Anime = mongoose.model("Anime", animeSchema);

@@ -44,9 +44,12 @@ const Player = () => {
 
 	return (
 		<div className="space-y-4">
-			<Button variant="ghost" onClick={() => navigate(-1)}>
+			{/* <Button variant="ghost" onClick={() => navigate(-1)}>
 				← Back
-			</Button>
+			</Button> */}
+			{/* <Button variant="ghost" onClick={() => navigate("/")}>
+				← Back
+			</Button> */}
 
 			<FeatureGrid columns={3}>
 				<div className="col-span-2 bg-muted rounded-lg">

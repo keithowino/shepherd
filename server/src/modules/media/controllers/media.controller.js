@@ -19,6 +19,21 @@ export const mediaController = {
 		}
 	},
 
+	async search(req, res, next) {
+		try {
+			const { q, limit } = req.validatedQuery;
+
+			const items = await mediaService.search({
+				query: q,
+				limit,
+			});
+
+			return success(res, items, "Anime search results fetched.");
+		} catch (err) {
+			next(err);
+		}
+	},
+
 	async series(req, res, next) {
 		try {
 			const { id } = req.validatedParams;

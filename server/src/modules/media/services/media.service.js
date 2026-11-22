@@ -29,6 +29,10 @@ export const mediaService = {
 		}
 	},
 
+	async search({ query, limit = 10 } = {}) {
+		return animeRepository.search({ query, limit });
+	},
+
 	async getSeries(id) {
 		const fresh = await animeRepository.isSeriesFresh(
 			id,

@@ -1,1 +1,5 @@
-export { recentQuerySchema, seriesParamsSchema } from "./media.schema.js";
+export {
+	recentQuerySchema,
+	seriesParamsSchema,
+	searchQuerySchema,
+} from "./media.schema.js";

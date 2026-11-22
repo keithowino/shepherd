@@ -8,6 +8,7 @@
 		"start": "node src/app/server.js",
 		"dev": "nodemon src/app/server.js",
 		"build": "echo 'No build step needed for server'",
+		"index:anime-catalogue": "node scripts/index-anime-catalogue.js",
 		"test": "node --test"
 	},
 	"keywords": [],

@@ -1,13 +1,8 @@
 import { Anime } from "../models/index.js";
 
-// console.log("[SERVER] Anime model imported by repository:", {
-// 	file: import.meta.url,
-// 	modelName: Anime.modelName,
-// 	termsByType: Anime.schema.path("termsByType")?.instance,
-// 	genre: Anime.schema.path("termsByType.genre")?.instance,
-// 	studios: Anime.schema.path("termsByType.studios")?.instance,
-// 	type: Anime.schema.path("termsByType.type")?.instance,
-// });
+function escapeRegex(value) {
+	return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 export const animeRepository = {
 	async upsertMany(rawAnimes, fetchedAt = new Date()) {
@@ -65,110 +60,6 @@ export const animeRepository = {
 			}
 			throw err;
 		}
-
-		// ...
-
-		// try {
-		// 	const result = await Anime.bulkWrite(ops, { ordered: false });
-
-		// 	console.log("[SERVER] Anime bulkWrite:", {
-		// 		operations: ops.length,
-		// 		acknowledged: result.acknowledged,
-		// 		matched: result.matchedCount,
-		// 		modified: result.modifiedCount,
-		// 		upserted: result.upsertedCount,
-		// 	});
-
-		// 	if (
-		// 		result.acknowledged &&
-		// 		result.matchedCount === 0 &&
-		// 		result.upsertedCount === 0 &&
-		// 		ops.length > 0
-		// 	) {
-		// 		console.warn(
-		// 			`[SERVER] Anime bulkWrite: no documents matched or inserted (${ops.length} operations).`,
-		// 		);
-		// 	}
-		// } catch (err) {
-		// 	console.error("[SERVER] Anime bulkWrite failed:", err.message);
-
-		// 	if (err.writeErrors?.length) {
-		// 		console.error(
-		// 			"[SERVER] First write error:",
-		// 			err.writeErrors[0].errmsg,
-		// 		);
-		// 	}
-
-		// 	throw err;
-		// }
-
-		// ...
-
-		// try {
-		// 	const result = await Anime.bulkWrite(ops, { ordered: false });
-
-		// 	console.log("[SERVER] Runtime Anime schema:", {
-		// 		termsByType: Anime.schema.path("termsByType")?.instance,
-		// 		genre: Anime.schema.path("termsByType.genre")?.instance,
-		// 		studios: Anime.schema.path("termsByType.studios")?.instance,
-		// 		producers: Anime.schema.path("termsByType.producers")?.instance,
-		// 		type: Anime.schema.path("termsByType.type")?.instance,
-		// 	});
-
-		// 	console.log("[SERVER] Anime model registration:", {
-		// 		modelName: Anime.modelName,
-		// 		modelFileSchemaPaths: Object.keys(Anime.schema.paths),
-		// 		registeredModels: Object.keys(Anime.db.models),
-		// 	});
-
-		// 	// const animeId = Number(rawAnimes[0].id);
-
-		// 	// const mongooseDocument = await Anime.findById(animeId).lean();
-
-		// 	// const nativeDocument = await Anime.collection.findOne({
-		// 	// 	_id: animeId,
-		// 	// });
-
-		// 	// console.log("[SERVER] Anime persistence verification:", {
-		// 	// 	animeId,
-		// 	// 	mongooseFound: Boolean(mongooseDocument),
-		// 	// 	nativeFound: Boolean(nativeDocument),
-		// 	// 	mongooseDocument,
-		// 	// 	nativeDocument,
-		// 	// });
-
-		// 	// console.log("[SERVER] Anime bulkWrite raw result:");
-
-		// 	// console.dir(result, { depth: null });
-
-		// 	// console.log("[SERVER] Anime bulkWrite result inspection:", {
-		// 	// 	resultType: result?.constructor?.name,
-		// 	// 	resultKeys: result ? Object.keys(result) : [],
-		// 	// 	acknowledged: result?.acknowledged,
-
-		// 	// 	matchedCount: result?.matchedCount,
-		// 	// 	modifiedCount: result?.modifiedCount,
-		// 	// 	upsertedCount: result?.upsertedCount,
-
-		// 	// 	legacyMatched: result?.nMatched,
-		// 	// 	legacyModified: result?.nModified,
-		// 	// 	legacyUpserted: result?.nUpserted,
-
-		// 	// 	rawResult: result?.result,
-		// 	// });
-
-		// 	// console.log("[SERVER] Anime model inspection:", {
-		// 	// 	modelName: Anime.modelName,
-		// 	// 	collectionName: Anime.collection.collectionName,
-		// 	// 	databaseName: Anime.db.name,
-		// 	// 	connectionReadyState: Anime.db.readyState,
-		// 	// 	schemaIdType: Anime.schema.path("_id")?.instance,
-		// 	// });
-		// } catch (err) {
-		// 	console.error("[SERVER] Anime bulkWrite failed:", err);
-
-		// 	throw err;
-		// }
 	},
 
 	async findById(id) {
@@ -200,5 +91,30 @@ export const animeRepository = {
 			{ _id: Number(id) },
 			{ $set: { seriesFetchedAt: fetchedAt } },
 		);
+	},
+
+	/**
+	 * A performance note: this initial implementation uses MongoDB
+	 * regular expressions. It does not claim to use an index for
+	 * substring matching. With a catalogue of approximately 9,404
+	 * records, this is a reasonable starting point to test; we can
+	 * evaluate indexing or a more specialized search strategy if
+	 * performance requires it.
+	 */
+	async search({ query, limit = 10 }) {
+		const searchPattern = new RegExp(escapeRegex(query), "i");
+
+		return Anime.find({
+			$or: [
+				{ title: searchPattern },
+				{ alternative: searchPattern },
+				{ titles: searchPattern },
+				{ native: searchPattern },
+			],
+		})
+			.select("_id title alternative titles native slug poster year")
+			.sort({ title: 1 })
+			.limit(limit)
+			.lean();
 	},
 };
