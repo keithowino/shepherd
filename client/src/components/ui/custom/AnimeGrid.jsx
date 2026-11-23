@@ -5,8 +5,32 @@ import { AnimeCard } from "./AnimeCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import NextAndPrevious from "./NextAndPrevious";
 import { FeatureGrid } from "./layout/index.js";
+import { useSearchParams } from "react-router-dom";
 
 const PER_PAGE = 20;
+
+function getPageFromSearchParams(searchParams) {
+	const rawPage = searchParams.get("page");
+
+	if (rawPage === null) {
+		return {
+			page: 1,
+			isValid: true,
+			shouldNormalize: false,
+		};
+	}
+
+	const parsedPage = Number(rawPage);
+
+	const isValid =
+		/^[1-9]\d*$/.test(rawPage) && Number.isSafeInteger(parsedPage);
+
+	return {
+		page: isValid ? parsedPage : 1,
+		isValid,
+		shouldNormalize: !isValid || rawPage === "1",
+	};
+}
 
 function getPageNumbers(currentPage, totalPages) {
 	if (totalPages <= 1) return [1];
@@ -34,22 +58,83 @@ function getPageNumbers(currentPage, totalPages) {
 }
 
 export const AnimeGrid = () => {
-	const [page, setPage] = useState(1);
+	const [searchParams, setSearchParams] = useSearchParams();
+
+	const {
+		page,
+		isValid: isValidPageParam,
+		shouldNormalize,
+	} = getPageFromSearchParams(searchParams);
+
+	// const page = Math.max(1, Number(searchParams.get("page")) || 1);
+
 	const [result, setResult] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 
 	useEffect(() => {
 		let active = true;
+		let shouldRefetch = false;
 
 		setLoading(true);
 		setError(null);
 
+		/**
+		 * Normalize malformed or noncanonical page parameters.
+		 */
+		if (shouldNormalize) {
+			setSearchParams(
+				(previousParams) => {
+					const nextParams = new URLSearchParams(previousParams);
+
+					nextParams.delete("page");
+
+					return nextParams;
+				},
+				{ replace: true },
+			);
+
+			return () => {
+				active = false;
+			};
+		}
+
 		api.recent(page, PER_PAGE)
 			.then((response) => {
-				if (active) {
-					setResult(response);
+				if (!active) return;
+
+				const totalPages = Math.max(
+					1,
+					Number(response.pagination?.total_pages) || 1,
+				);
+
+				/**
+				 * Correct page requests exceeding the available pages.
+				 */
+				if (page > totalPages) {
+					shouldRefetch = true;
+
+					setSearchParams(
+						(previousParams) => {
+							const nextParams = new URLSearchParams(
+								previousParams,
+							);
+
+							if (totalPages === 1) {
+								nextParams.delete("page");
+							} else {
+								nextParams.set("page", String(totalPages));
+							}
+
+							return nextParams;
+						},
+						{ replace: true },
+					);
+
+					return;
 				}
+
+				setResult(response);
 			})
 			.catch((err) => {
 				if (active) {
@@ -57,7 +142,7 @@ export const AnimeGrid = () => {
 				}
 			})
 			.finally(() => {
-				if (active) {
+				if (active && !shouldRefetch) {
 					setLoading(false);
 				}
 			});
@@ -65,7 +150,7 @@ export const AnimeGrid = () => {
 		return () => {
 			active = false;
 		};
-	}, [page]);
+	}, [page, shouldNormalize, setSearchParams]);
 
 	const totalPages = result?.pagination?.total_pages ?? 1;
 	const pageNumbers = getPageNumbers(page, totalPages);
@@ -77,7 +162,17 @@ export const AnimeGrid = () => {
 			return;
 		}
 
-		setPage(nextPage);
+		setSearchParams((previousParams) => {
+			const nextParams = new URLSearchParams(previousParams);
+
+			if (nextPage === 1) {
+				nextParams.delete("page");
+			} else {
+				nextParams.set("page", String(nextPage));
+			}
+
+			return nextParams;
+		});
 	};
 
 	if (error) {

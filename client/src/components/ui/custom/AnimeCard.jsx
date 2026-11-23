@@ -22,7 +22,7 @@ export const AnimeCard = ({ anime }) => {
 
 	return (
 		<Link
-			to={`/shepherd/anime/${anime.id}`}
+			to={`/anime/${anime.id}`}
 			className="group mx-auto block w-full max-w-40 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring sm:max-w-44 lg:max-w-48"
 		>
 			<article>

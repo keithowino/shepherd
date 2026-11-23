@@ -31,7 +31,7 @@ const AnimeSearch = () => {
 	}));
 
 	const handleSelect = (anime) => {
-		navigate(`/shepherd/anime/${anime._id}`);
+		navigate(`/anime/${anime._id}`);
 	};
 
 	const statusMessage = isDebouncing

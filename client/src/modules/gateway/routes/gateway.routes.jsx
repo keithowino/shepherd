@@ -1,4 +1,5 @@
-import { Landing, Player } from "../pages/index.js";
+import { AnimeLayout } from "../layouts/index.js";
+import { Landing, Player, Updates } from "../pages/index.js";
 
 const gatewayRoutes = [
 	{
@@ -6,8 +7,17 @@ const gatewayRoutes = [
 		element: <Landing />,
 	},
 	{
-		path: "/shepherd/anime/:id",
-		element: <Player />,
+		element: <AnimeLayout />,
+		children: [
+			{
+				path: "/updates",
+				element: <Updates />,
+			},
+			{
+				path: "/anime/:id",
+				element: <Player />,
+			},
+		],
 	},
 ];
 

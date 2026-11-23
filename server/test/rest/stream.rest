@@ -10,7 +10,7 @@ GET {{baseUrl}}/anime/recent?page=3&perPage=20
 
 ###
 
-GET {{baseUrl}}/anime/search?q=naruto
+GET {{baseUrl}}/anime/search?q=Yesterday
 
 ###
 
@@ -18,4 +18,4 @@ GET {{baseUrl}}/anime/search?q=naruto&limit=5
 
 ###
 
-GET {{baseUrl}}/anime/series/1000
+GET {{baseUrl}}/anime/series/2390
