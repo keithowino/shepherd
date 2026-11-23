@@ -4,7 +4,7 @@ export default function FeatureGrid({ children, columns = 3, className }) {
 		2: "grid-cols-1 sm:grid-cols-2",
 		3: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
 		4: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
-		5: "max-[375px]:grid-cols-2 grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8",
+		5: "max-[375px]:grid-cols-2 grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6",
 	};
 
 	const gridCols = columnLayouts[columns] ?? columnLayouts[3];

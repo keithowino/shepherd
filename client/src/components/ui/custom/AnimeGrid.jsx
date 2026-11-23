@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
 import { api } from "@/lib/api";
-import { AnimeCard } from "./AnimeCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import NextAndPrevious from "./NextAndPrevious";
 import { FeatureGrid } from "./layout/index.js";
 import { useSearchParams } from "react-router-dom";
+import { FlockCard } from "./FlockCard";
 
 const PER_PAGE = 20;
 
@@ -65,8 +65,6 @@ export const AnimeGrid = () => {
 		isValid: isValidPageParam,
 		shouldNormalize,
 	} = getPageFromSearchParams(searchParams);
-
-	// const page = Math.max(1, Number(searchParams.get("page")) || 1);
 
 	const [result, setResult] = useState(null);
 	const [loading, setLoading] = useState(true);
@@ -197,7 +195,17 @@ export const AnimeGrid = () => {
 		<div className="space-y-8">
 			<FeatureGrid columns={5}>
 				{result.items.map((anime) => (
-					<AnimeCard key={anime.id} anime={anime} />
+					<FlockCard
+						key={anime.id}
+						anime={anime}
+						render={{
+							type: true,
+							score: true,
+							episodeLabel: true,
+							animeDescription: true,
+							caption: true,
+						}}
+					/>
 				))}
 			</FeatureGrid>
 

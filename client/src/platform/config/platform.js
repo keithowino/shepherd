@@ -1,11 +1,11 @@
 export const platform = {
-	name: "SHEPHERD",
+	name: "Shepherd",
 
 	author: "Pickaxe & Shovel",
 
-	// excerpt: "Start with what you have. Discover what you can make.",
+	excerpt: "Anime streaming MVP.",
 
-	// description: "AI-powered ideation tool for DIY innovators.",
+	description: "Come one come all, yee who seek serenity.",
 
 	// location: {
 	// 	name: "Tassia Complex",

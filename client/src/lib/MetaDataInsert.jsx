@@ -4,16 +4,16 @@ import { platform } from "@/platform/config/index.js";
 const MetaDataInsert = ({ title = platform.name }) => {
 	let pageTitle =
 		title === platform.name
-			? `${title} - ${platform.author}`
+			? `${title} - ${platform.excerpt}`
 			: `${title} - ${platform.name}`;
 
 	return (
 		<Helmet>
 			<title>{pageTitle}</title>
-			{/* <meta
+			<meta
 				name="description"
-				content={`${platform.name} - AI-powered ideation tool for DIY innovators.`}
-			/> */}
+				content={`${platform.name} - ${platform.description}`}
+			/>
 			<meta
 				name="keywords"
 				content="coding, website design, freelancing, software development, ai, llm, anime, aura"

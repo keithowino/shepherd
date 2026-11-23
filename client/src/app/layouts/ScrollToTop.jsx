@@ -12,7 +12,7 @@ const getHashId = (hash) => {
 };
 
 export default function ScrollToTop() {
-	const { pathname, hash } = useLocation();
+	const { pathname, search, hash } = useLocation();
 	const navigationType = useNavigationType();
 
 	useEffect(() => {
@@ -20,16 +20,22 @@ export default function ScrollToTop() {
 
 		if (hash) {
 			const id = getHashId(hash);
+
 			const timer = window.setTimeout(() => {
 				document
 					.getElementById(id)
 					?.scrollIntoView({ behavior: "smooth" });
 			}, 50);
+
 			return () => window.clearTimeout(timer);
 		}
 
-		window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-	}, [pathname, hash, navigationType]);
+		window.scrollTo({
+			top: 0,
+			left: 0,
+			behavior: "instant",
+		});
+	}, [pathname, search, hash, navigationType]);
 
 	return null;
 }

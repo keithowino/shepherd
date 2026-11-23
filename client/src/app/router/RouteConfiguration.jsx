@@ -3,12 +3,6 @@ import { gatewayRoutes } from "../../modules/index.js";
 
 function ApplicationRoutes() {
 	return useRoutes([
-		// {
-		// 	element: <MarketingLayout />,
-		// 	children: [
-		// 		...gatewayRoutes,
-		// 	],
-		// },
 		...gatewayRoutes,
 		{
 			path: "*",
