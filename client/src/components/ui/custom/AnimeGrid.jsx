@@ -86,7 +86,7 @@ export const AnimeGrid = () => {
 
 	if (loading || !result) {
 		return (
-			<FeatureGrid columns={4}>
+			<FeatureGrid columns={5}>
 				{Array.from({ length: PER_PAGE }).map((_, i) => (
 					<div key={i} className="space-y-2">
 						<Skeleton className="aspect-2/3 rounded-xl" />
@@ -100,7 +100,7 @@ export const AnimeGrid = () => {
 
 	return (
 		<div className="space-y-8">
-			<FeatureGrid columns={4}>
+			<FeatureGrid columns={5}>
 				{result.items.map((anime) => (
 					<AnimeCard key={anime.id} anime={anime} />
 				))}
