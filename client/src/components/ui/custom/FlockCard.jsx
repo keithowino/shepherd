@@ -1,15 +1,18 @@
 import { Link } from "react-router-dom";
 import { Play, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 export const FlockCard = ({
 	anime,
+	className,
 	imgLoader = "lazy",
 	render = {
 		type: false,
 		score: false,
 		episodeLabel: false,
 		animeDescription: false,
+		animeDescriptionType: "default", // "countdown" | "default"
 		overlayDescription: false,
 		caption: false,
 	},
@@ -35,7 +38,10 @@ export const FlockCard = ({
 	return (
 		<Link
 			to={`/anime/${anime.id}`}
-			className="group mx-auto block w-full max-w-40 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring sm:max-w-44 lg:max-w-48"
+			className={cn(
+				"group mx-auto block w-full max-w-40 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring sm:max-w-44 lg:max-w-48",
+				className,
+			)}
 		>
 			<article>
 				{/* Fixed 2:3 frame => every card has the same poster size */}
@@ -50,13 +56,6 @@ export const FlockCard = ({
 					)}
 
 					<div className="absolute inset-x-0 top-0 flex items-start justify-between p-1.5 sm:p-2">
-						{/* {render.type && type ? (
-							<span className="rounded-md bg-black/65 px-1 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm sm:text-[11px]">
-								{type}
-							</span>
-						) : (
-							<span />
-						)} */}
 						{render.caption && (
 							<div className="flex gap-1">
 								{anime.is_sub ? (
@@ -102,24 +101,25 @@ export const FlockCard = ({
 						<h3 className="line-clamp-2 min-h-8 text-xs leading-4 font-semibold sm:min-h-10 sm:text-sm sm:leading-5">
 							{anime.title}
 						</h3>
-						<div className="flex items-center gap-1.5 text-[11px] text-muted-foreground sm:gap-2 sm:text-xs">
-							{airing && (
-								<span className="flex items-center gap-1 text-primary">
-									<span className="h-1.5 w-1.5 rounded-full bg-primary" />
-									Airing
-								</span>
-							)}
-							{/* {anime.year && <span>{anime.year}</span>} */}
-							{[type, anime.year].filter(Boolean).join(" · ")}
-							{/* {genres[0] && (
-								<span
-									className="hidden truncate sm:inline"
-									title={genres.join(", ")}
-								>
-									{genres.join(", ")}
-								</span>
-							)} */}
-						</div>
+						{render.animeDescriptionType === "default" ? (
+							<div className="flex items-center gap-1.5 text-[11px] text-muted-foreground sm:gap-2 sm:text-xs">
+								{airing && (
+									<span className="flex items-center gap-1 text-primary">
+										<span className="h-1.5 w-1.5 rounded-full bg-primary" />
+										Airing
+									</span>
+								)}
+								{[type, anime.year].filter(Boolean).join(" · ")}
+							</div>
+						) : (
+							<p className="mt-0.5 text-[11px] text-muted-foreground">
+								{anime.nextEpisode
+									? `Next · EP ${anime.nextEpisode}`
+									: anime.released
+										? `EP ${anime.released}`
+										: "Airing"}
+							</p>
+						)}
 					</div>
 				)}
 

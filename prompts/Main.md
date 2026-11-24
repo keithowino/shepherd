@@ -243,7 +243,7 @@ export default Updates;
 import { useEffect, useState } from "react";
 
 import { api } from "@/lib/api";
-import { AnimeCard } from "./AnimeCard";
+import { FlockCard } from "./FlockCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import NextAndPrevious from "./NextAndPrevious";
 import { FeatureGrid } from "./layout/index.js";
@@ -437,7 +437,17 @@ export const AnimeGrid = () => {
 		<div className="space-y-8">
 			<FeatureGrid columns={5}>
 				{result.items.map((anime) => (
-					<AnimeCard key={anime.id} anime={anime} />
+					<FlockCard
+						key={anime.id}
+						anime={anime}
+						render={{
+							type: true,
+							score: true,
+							episodeLabel: true,
+							animeDescription: true,
+							caption: true,
+						}}
+					/>
 				))}
 			</FeatureGrid>
 
@@ -448,6 +458,129 @@ export const AnimeGrid = () => {
 				totalPages={totalPages}
 			/>
 		</div>
+	);
+};
+```
+
+```text
+~\client\src\components\ui\custom\FlockCard.jsx
+```
+
+```jsx
+import { Link } from "react-router-dom";
+import { Play, Star } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+
+export const FlockCard = ({
+	anime,
+	imgLoader = "lazy",
+	render = {
+		type: false,
+		score: false,
+		episodeLabel: false,
+		animeDescription: false,
+		overlayDescription: false,
+		caption: false,
+	},
+}) => {
+	const type = anime.terms_by_type?.type?.[0];
+	const genres = anime.terms_by_type?.genre?.slice(0, 2) ?? [];
+	const score =
+		Number(anime.score) > 0 ? Number(anime.score).toFixed(1) : null;
+	const airing = anime.status === "Currently Airing";
+
+	const released = anime.is_sub || null;
+	const total = anime.episodes || null;
+	const episodeLabel =
+		released && total && airing
+			? `EP ${released} / ${total}`
+			: total
+				? `${total} eps`
+				: released
+					? `EP ${released}`
+					: null;
+
+	return (
+		<Link
+			to={`/anime/${anime.id}`}
+			className="group mx-auto block w-full max-w-40 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring sm:max-w-44 lg:max-w-48"
+		>
+			<article>
+				<div className="relative aspect-2/3 overflow-hidden rounded-xl bg-muted ring-1 ring-border transition group-hover:ring-2 group-hover:ring-primary">
+					{anime.poster && (
+						<img
+							src={anime.poster}
+							alt={anime.title}
+							loading={imgLoader}
+							className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+						/>
+					)}
+
+					<div className="absolute inset-x-0 top-0 flex items-start justify-between p-1.5 sm:p-2">
+						{render.caption && (
+							<div className="flex gap-1">
+								{anime.is_sub ? (
+									<Badge
+										variant="secondary"
+										className="rounded"
+									>
+										SUB
+									</Badge>
+								) : null}
+								{anime.is_dub ? (
+									<Badge className="rounded">DUB</Badge>
+								) : null}
+							</div>
+						)}
+						{render.score && score && (
+							<span className="flex items-center gap-0.5 rounded bg-black/65 px-1 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm sm:gap-1 sm:text-[11px]">
+								<Star className="h-2.5 w-2.5 fill-amber-400 text-amber-400 sm:h-3 sm:w-3" />
+								{score}
+							</span>
+						)}
+					</div>
+
+					<div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/85 via-black/40 to-transparent p-1.5 pt-8 sm:p-2 sm:pt-10">
+						{render.episodeLabel && episodeLabel && (
+							<span className="text-[10px] font-semibold text-white sm:text-[11px]">
+								{episodeLabel}
+							</span>
+						)}
+					</div>
+
+					<div className="absolute inset-0 hidden place-items-center bg-black/30 opacity-0 transition-opacity group-hover:opacity-100 sm:grid">
+						<span className="grid h-10 w-10 place-items-center rounded-full bg-primary text-primary-foreground">
+							<Play className="h-4 w-4 fill-current" />
+						</span>
+					</div>
+				</div>
+
+				{render.animeDescription && (
+					<div className="mt-1.5 space-y-0.5 px-0.5 sm:mt-2 sm:space-y-1">
+						<h3 className="line-clamp-2 min-h-8 text-xs leading-4 font-semibold sm:min-h-10 sm:text-sm sm:leading-5">
+							{anime.title}
+						</h3>
+						<div className="flex items-center gap-1.5 text-[11px] text-muted-foreground sm:gap-2 sm:text-xs">
+							{airing && (
+								<span className="flex items-center gap-1 text-primary">
+									<span className="h-1.5 w-1.5 rounded-full bg-primary" />
+									Airing
+								</span>
+							)}
+							{[type, anime.year].filter(Boolean).join(" · ")}
+						</div>
+					</div>
+				)}
+
+				{render.overlayDescription && (
+					<div className="absolute rounded-b-xl inset-x-0 bottom-0 bg-linear-to-t from-black/80 to-transparent p-3 pt-10">
+						<p className="line-clamp-2 text-xs font-semibold text-white">
+							{anime.title}
+						</p>
+					</div>
+				)}
+			</article>
+		</Link>
 	);
 };
 ```
